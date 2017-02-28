@@ -53,16 +53,19 @@ int main() {
 		if (czekolada* nowe = dynamic_cast<czekolada*>(geshenk)) {
 			nowe->zjedz();
 			nowe->typ();
+			cout << endl;
 		}
 
 		if (pieniadze* nowe = dynamic_cast<pieniadze*>(geshenk)) {
 			nowe->wydaj();
 			nowe->typ();
+			cout << endl;
 		}
 
 		if (schlapmyca* nowe = dynamic_cast<schlapmyca*>(geshenk)) {
 			nowe->zaloz();
 			nowe->typ();
+			cout << endl;
 		}
 	}
 
