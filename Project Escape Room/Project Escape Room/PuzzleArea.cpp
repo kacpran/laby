@@ -23,8 +23,6 @@ bool PuzzleArea::Backward(int x,int y,char direction) {
 			ObecnyObraz = ObrazSciany[West];
 			break;
 		}
-		//SDL_BlitSurface(ObecnyObraz, NULL, Obraz, NULL);
-		SDL_UpdateWindowSurface(Ekran);
 		return true;
 	}
 	return false;
@@ -38,41 +36,53 @@ PuzzleArea::PuzzleArea(int x,int y,int given_width,int given_heigth,int given_it
 }
 
 
-bool PickItem::Activate(Ekwipunek equipment,char) {
+bool PickItem::Activate(Ekwipunek* equipment,char) {
 	Item* pomoc = new Item();
 	pomoc->PickUp(item_id,equipment);
 	return false;
 }
 
-bool UseItem::CheckClickEQ(int x, int y, char direction, Ekwipunek equipment) {
-	std::vector<Item*>::iterator it;
+bool UseItem::CheckClickEQ(int x, int y, char direction, Ekwipunek* equipment,int area_id) {
+	std::vector<Item*>::iterator it;;
+	bool odp = false;
 	if (y >= SCREEN_HEIGHT - 125) {
-		for (int i = 0; i < 6; i++) {
-			if (x > 20+i*130 && x < 150 + i * 130) {
-				if ((*it)->id == item_id) {
-					//odblokuj obszar
-					(*it)->Remove(equipment, item_id);
+		it=equipment->inside.begin();
+		if (equipment->inside.size()>0) {
+			do {
+				if (x > 20 + area_id * 130 && x < 150 + area_id * 130) {
+					if ((*it)->id == item_id) {
+						(*it)->Remove(equipment, item_id);
+						it = equipment->inside.end();
+						odp = true;
+					}
 				}
-			}
+				else {
+					it++;
+				}
+			} while (it != equipment->inside.end());
 		}
 	}
-	return false;
+	return odp;
 }
 
-bool UseItem::Activate(Ekwipunek equipment,char direction) {
+bool UseItem::Activate(Ekwipunek* equipment,char direction) {
 	int x, y;
 	SDL_Event e;
 	ObecnyObraz = ElementyOtoczenia[this->area_id];
 	SDL_RenderCopy(Obraz, ObecnyObraz, NULL, NULL);
-	//SDL_UpdateWindowSurface(Ekran);
 	SDL_RenderPresent(Obraz);
 	bool quit = false;
+	Item item;
 	while (!quit) {
-		//Handle events on queue
+		//Kolejka zdarzen
 		while (SDL_PollEvent(&e) != 0)
 		{
 			if (e.type == SDL_MOUSEBUTTONDOWN) {
 				SDL_GetMouseState(&x, &y);
+				if (CheckClickEQ(x, y, direction, equipment,this->area_id-1)==true) {
+					item.PickUp(area_id+1, equipment);
+					quit = true;
+				}
 				quit = Backward(x, y, direction);
 			}
 			if (e.type == SDL_QUIT )
@@ -81,7 +91,6 @@ bool UseItem::Activate(Ekwipunek equipment,char direction) {
 			}
 		}
 	}
-	std::cout << "dziala" << std::endl;
 	return false;
 }
 
@@ -91,27 +100,21 @@ UseItem::UseItem(int x, int y, int given_width, int given_heigth, int given_item
 	width = given_width;
 	height = given_heigth;
 	area_id = given_area_id;
+	item_id = given_itemnumber;
 	return;
 }
 
 bool Puzzle::Activate() {
-	//Item* pomoc = new Item();
-	int type=0;
-	switch (type) {
-	case 1://puzzle
-		break;
-	case 2://kabelki
-		break;
-	case 3://cus
-		break;
-	}
+
 	return false;
 }
 
-bool Code::Activate(Ekwipunek equipment,char direction) {
+bool Code::Activate(Ekwipunek* equipment,char direction) {
 	if (InsertCode(direction) == true) {
-
+		Item item;
+		item.PickUp(1, equipment);
 	}
+	Backward(350, 475, direction);
 	return false;
 }
 
@@ -120,14 +123,13 @@ bool Code::InsertCode(char direction) {
 	bool odp = false;
 	ObecnyObraz = ElementyOtoczenia[0];
 	SDL_RenderCopy(Obraz, ObecnyObraz, NULL, NULL);
-	//SDL_UpdateWindowSurface(Ekran);
 	SDL_RenderPresent(Obraz);
 	SDL_Event e;
 	int x,y,i = 0;
 	//Sprawdza ktory przycisk
 	bool quit = false;
 	while (!quit){
-		//Handle events on queue
+		//Kolejka zdarzen
 		while (SDL_PollEvent(&e) != 0)
 		{
 			if (e.type == SDL_MOUSEBUTTONDOWN) {
@@ -191,7 +193,6 @@ bool Code::InsertCode(char direction) {
 			return false;
 			}
 		else {
-			std::cout << "good" << std::endl;
 			odp = true;
 			}
 		}

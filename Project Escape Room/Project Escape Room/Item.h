@@ -9,10 +9,10 @@
 class Item {
 	public:
 		int id;
-		void PickUp(int, Ekwipunek);
-		bool Use(Ekwipunek,int);
-		void Remove(Ekwipunek,int);
-
+		void PickUp(int, Ekwipunek*);
+		bool Use(Ekwipunek*,int);
+		void Remove(Ekwipunek*,int);
+		void ChangeImage(int,bool);
 	Item();
 	Item(int);
 };

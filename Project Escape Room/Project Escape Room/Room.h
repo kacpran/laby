@@ -15,9 +15,9 @@ class Room {
 	
 public:
 	Wall* walls;
-	void WeNeedToBuildAWall();
+	void WeNeedToBuildAWall();//Tworzenie listy scian
 	void AddNewPuzzle(char,int , int , int , int , int , int ,int );
-	bool CheckClick(int, int,char,Ekwipunek);
+	bool CheckClick(int, int,char,Ekwipunek*);
 };
 
 #endif

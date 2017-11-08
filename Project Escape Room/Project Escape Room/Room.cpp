@@ -46,20 +46,16 @@ void Room::AddNewPuzzle(char direction, int x, int y, int given_width, int given
 	return;
 }
 
-bool Room::CheckClick(int x, int y,char direction,Ekwipunek equipment) {
+bool Room::CheckClick(int x, int y,char direction,Ekwipunek* equipment) {
 	int i = 1;
 	std::list<PuzzleArea*>::iterator it;
 	Wall* pomoc = walls;
-	
-
 	while (pomoc->direction != direction) {
 		pomoc = pomoc->next;
 	}
-
 		it=pomoc->puzzles.begin();
 		do {
-			std::cout << i << std::endl;
-			if (x >= (*it)->x_pos && x <= ((*it)->width) + ((*it)->x_pos)) {
+			if (x >= (*it)->x_pos && x <= ((*it)->width) + ((*it)->x_pos)) {	
 				if (y >= (*it)->y_pos && y <= ((*it)->height) + ((*it)->y_pos)) {
 					return (*it)->Activate(equipment,direction);
 				}

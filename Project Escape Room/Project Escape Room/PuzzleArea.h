@@ -8,14 +8,14 @@
 class PuzzleArea {
 public:
 	int X_exit=300;
-	int Y_exit=550;
+	int Y_exit=450;
 	int x_pos;
 	int y_pos;
 	int width;
 	int height;
 	int area_id;
-		bool Backward(int,int,char);		
-		virtual bool Activate(Ekwipunek,char)=0;
+		bool Backward(int,int,char);//Cofnij widok
+		virtual bool Activate(Ekwipunek*,char)=0;
 		PuzzleArea();
 		PuzzleArea(int,int,int,int,int, int);
 };
@@ -27,7 +27,7 @@ class PickItem : public PuzzleArea{
 	using PuzzleArea::height;
 	using PuzzleArea::area_id;
 	int  item_id;
-	virtual bool Activate(Ekwipunek,char);
+	virtual bool Activate(Ekwipunek*,char);
 };
 
 class Code : public PuzzleArea {
@@ -37,8 +37,8 @@ public:
 	using PuzzleArea::width;
 	using PuzzleArea::height;
 	using PuzzleArea::area_id;
-	int ProgrammedCode[4];
-	virtual bool Activate(Ekwipunek,char);
+	int ProgrammedCode[4]; 
+	virtual bool Activate(Ekwipunek*,char);
 	bool InsertCode(char);
 	Code(int,int,int,int, int, int, int, int, int, int);
 };
@@ -51,8 +51,8 @@ public:
 	using PuzzleArea::height;
 	using PuzzleArea::area_id;
 	int item_id;
-	virtual bool Activate(Ekwipunek,char);
-	bool CheckClickEQ(int, int, char, Ekwipunek);
+	virtual bool Activate(Ekwipunek*,char);
+	bool CheckClickEQ(int, int, char, Ekwipunek*,int);
 	UseItem(int, int, int, int, int, int);
 };
 
